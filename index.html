@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+  <title>Wedding Invitation</title>
+</head>
+<body>
+  <div class="envelope-screen" id="envelope-screen">
+    <video class="envelope-video" id="envelope-video" src="img/Video%20Project%2023.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <button class="envelope-tap-target" id="envelope" type="button" aria-label="Tap anywhere to open the wedding invitation"></button>
+  </div>
+  <div class="bg-vid">
+    <video src="img/bg-video2.mp4" autoplay muted loop playsinline id="vid"></video>
+  </div>
+  <main class="text-overlay" id="invitation">
+    <p class="eyebrow">With joyful hearts, we invite you to celebrate</p>
+    <div class="heart-divider" aria-hidden="true">
+      <span></span>
+      <strong>&#10084;</strong>
+      <span></span>
+    </div>
+    <h1>Mubina Bashir Khan<br>&amp;<br>M. Zaid Munaf Gaonkar</h1> 
+    
+    <p class="closing">Join us as we begin our forever together.</p>
+  </main>
+  <div class="scroll-prompt" aria-hidden="true">
+    <span>Scroll</span>
+  </div>
+  <section class="details" id="details">
+    <div class="heart-divider" aria-hidden="true">
+      <span></span>
+      <strong>&#10084;</strong>
+      <span></span>
+    </div>
+    <p>We are honoured by your presence as we celebrate love, laughter, and a beautiful beginning.</p>
+     <p>We thankyou to be the part of this blessed occasion.</p>
+    <div class="heart-divider details-heart-green" aria-hidden="true">
+      <span></span>
+      <strong>&#10084;</strong>
+      <span></span>
+    </div>
+  </section>
+  <section class="scratch-section" aria-label="Scratch reveal">
+    <div class="heart-particles" aria-hidden="true">
+      <span>&#10084;</span><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span>
+      <span>&#10084;</span><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span>
+      <span>&#10084;</span><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span>
+      <span>&#10084;</span><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span>
+      <span>&#10084;</span><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span>
+    </div>
+    <p class="scratch-prompt">Scratch to reveal</p>
+    <div class="heart-divider scratch-divider">
+      <span></span>
+      <button class="scratch-heart" id="scratch-heart" type="button" aria-label="Scratch the heart to reveal a message">
+        <span class="scratch-message">
+          <span class="scratch-invitation">You're Invited!</span>
+          <span class="scratch-date">January 26, 2027</span>
+          <span class="scratch-day">Tuesday</span>
+          <span class="scratch-time">07:30 PM</span>
+        </span>
+        <canvas width="180" height="160" aria-hidden="true"></canvas>
+      </button>
+      <span></span>
+    </div>
+    <button class="save-date-button" type="button">&#128197; <span>Save the date</span></button>
+  </section>
+  <section class="photo-carousel" aria-label="Wedding photo gallery">
+    <div class="carousel-heading">
+      <div class="heart-divider" aria-hidden="true">
+        <span></span>
+        <strong>&#10084;</strong>
+        <span></span>
+      </div>
+    </div>
+    <div class="carousel-frame" id="photo-carousel">
+      <div class="carousel-slides">
+        <img class="carousel-slide is-active" src="img/carousal-1.png" alt="Wedding decoration" aria-hidden="false">
+        <img class="carousel-slide" src="img/carousal-2.png" alt="Wedding celebration" aria-hidden="true">
+        <img class="carousel-slide" src="img/carousal-3.png" alt="Wedding flowers" aria-hidden="true">
+        <img class="carousel-slide" src="img/carousal-4.png" alt="Wedding couple" aria-hidden="true">
+      </div>
+    </div>
+    <div class="countdown" aria-label="Countdown to September 30, 2026">
+      <h2>Soon.</h2>
+      <!-- <div class="heart-divider" aria-hidden="true">
+        <span></span>
+        <strong>&#10084;</strong>
+        <span></span>
+      </div> -->
+      <div class="countdown-grid">
+        <div class="countdown-unit">
+          <strong id="countdown-days">0</strong>
+          <span>Days</span>
+        </div>
+        <div class="countdown-unit">
+          <strong id="countdown-hours">0</strong>
+          <span>Hours</span>
+        </div>
+        <div class="countdown-unit">
+          <strong id="countdown-minutes">0</strong>
+          <span>Minutes</span>
+        </div>
+        <div class="countdown-unit">
+          <strong id="countdown-seconds">0</strong>
+          <span>Seconds</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="program-timeline" aria-labelledby="timeline-title">
+    <div class="timeline-heading">
+      <span class="timeline-icon" aria-hidden="true">
+        <span class="clock-hand clock-hand-hour"></span>
+        <span class="clock-hand clock-hand-minute"></span>
+      </span>
+      <h2 id="timeline-title">Program Timeline</h2>
+      <div class="heart-divider" aria-hidden="true">
+        <span></span>
+        <strong>&#10084;</strong>
+        <span></span>
+      </div>
+    </div>
+    <div class="timeline">
+      <article class="timeline-event">
+        <span class="timeline-marker" aria-hidden="true"></span>
+        <div>
+          <h3>Guest Arrival</h3>
+          <p class="timeline-time">Jan 26, 2027, 07:00 PM</p>
+          <p>We warmly welcome you..!</p>
+        </div>
+      </article>
+      <article class="timeline-event">
+        <span class="timeline-marker" aria-hidden="true"></span>
+        <div>
+          <h3>Nikkah Ceremony</h3>
+          <p class="timeline-time">Jan 26, 2027, 07:30 PM</p>
+          <p>Your gracious presence is requested &#10084;</p>
+        </div>
+      </article>
+      <article class="timeline-event">
+        <span class="timeline-marker" aria-hidden="true"></span>
+        <div>
+          <h3>Reception</h3>
+          <p class="timeline-time">Jan 26, 2027, 8:30 PM</p>
+          <p>Your gracious presence is requested at the reception at 8:30 PM onwards.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="venue-section" aria-labelledby="venue-title">
+    <div class="venue-icon" aria-hidden="true">
+      <span></span>
+    </div>
+    <h2 id="venue-title">Venue</h2>
+    <div class="venue-divider heart-divider" aria-hidden="true">
+      <span></span>
+      <strong>&#10084;</strong>
+      <span></span>
+    </div>
+    <h3>Mannat Banquets</h3>
+    <p> Shed No 119, A and120-A, Dr Mascarenhas Rd, Anjeer Wadi, Mustafa Bazar, Mazgaon, Mumbai,<br>Maharashtra 400010</p>
+    <div class="venue-illustration" aria-hidden="true">
+      <span class="venue-roof venue-roof-left"></span>
+      <span class="venue-roof venue-roof-center"></span>
+      <span class="venue-roof venue-roof-right"></span>
+      <span class="venue-tower venue-tower-left"></span>
+      <span class="venue-tower venue-tower-center"></span>
+      <span class="venue-tower venue-tower-right"></span>
+      <span class="venue-arch venue-arch-left"></span>
+      <span class="venue-arch venue-arch-right"></span>
+      <span class="venue-base"></span>
+    </div>
+    <a class="venue-map-button" href="https://maps.app.goo.gl/Eoe7izCQhhLsYJA89" target="_blank" rel="noreferrer">View on Google Maps</a>
+  </section>
+</body>
+</html>
