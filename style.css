@@ -358,6 +358,7 @@ body.overlay-ready .text-overlay > :nth-child(4) {
   filter: drop-shadow(0 1rem 1.1rem rgba(59, 23, 34, 0.24));
   color: #A8324A;
   cursor: crosshair;
+  clip-path: polygon(50% 100%, 13% 58%, 5% 35%, 8% 16%, 22% 4%, 39% 6%, 50% 22%, 61% 6%, 78% 4%, 92% 16%, 95% 35%, 87% 58%);
   touch-action: none;
 }
 
@@ -577,7 +578,7 @@ body.overlay-ready .text-overlay > :nth-child(4) {
   color: #F8EDEF;
   text-align: center;
   opacity: 0;
-  transform: translateY(calc(8rem - (var(--text-progress, 0) * 18vh)));
+  transform: translateY(max(0px, calc(8rem - (var(--text-progress, 0) * 18vh))));
   transition: opacity 450ms ease, transform 450ms ease;
 }
 
