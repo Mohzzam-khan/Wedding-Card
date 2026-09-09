@@ -3,6 +3,7 @@ const details = document.querySelector("#details");
 const envelopeScreen = document.querySelector("#envelope-screen");
 const envelope = document.querySelector("#envelope");
 const envelopeVideo = document.querySelector("#envelope-video");
+const backgroundVideo = document.querySelector("#vid");
 const scratchHeart = document.querySelector("#scratch-heart");
 const scratchCanvas = scratchHeart.querySelector("canvas");
 const scratchContext = scratchCanvas.getContext("2d", { willReadFrequently: true });
@@ -17,6 +18,28 @@ const countdownUnits = {
 };
 let hasStartedInvitationTransition = false;
 
+const setupVideo = (video) => {
+	if (!video || !video.dataset.src || video.dataset.loaded === "true") {
+		return;
+	}
+
+	video.muted = true;
+	video.playsInline = true;
+	video.setAttribute("playsinline", "true");
+	video.setAttribute("webkit-playsinline", "true");
+	video.preload = "metadata";
+	video.src = video.dataset.src;
+	video.load();
+	video.dataset.loaded = "true";
+};
+
+const loadInitialMedia = () => {
+	setupVideo(backgroundVideo);
+	if (window.matchMedia("(min-width: 768px)").matches) {
+		setupVideo(envelopeVideo);
+	}
+};
+
 const updateCountdown = () => {
 	const remainingTime = Math.max(countdownTarget - Date.now(), 0);
 	const totalSeconds = Math.floor(remainingTime / 1000);
@@ -30,6 +53,9 @@ const updateCountdown = () => {
 	countdownUnits.minutes.textContent = String(minutes).padStart(2, "0");
 	countdownUnits.seconds.textContent = String(seconds).padStart(2, "0");
 };
+
+setupVideo(backgroundVideo);
+setupVideo(envelopeVideo);
 
 updateCountdown();
 window.setInterval(updateCountdown, 1000);
@@ -65,13 +91,14 @@ const startInvitationTransition = () => {
 	hasStartedInvitationTransition = true;
 	window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 	document.body.classList.add("invitation-open");
-	envelopeScreen.classList.add("is-opening");
 	document.body.classList.add("overlay-ready");
+	envelopeScreen.classList.add("is-opening");
 	window.setTimeout(() => envelopeScreen.classList.add("is-open"), 700);
 };
 
 envelope.addEventListener("click", () => {
 	envelope.disabled = true;
+	setupVideo(envelopeVideo);
 	envelopeVideo.currentTime = 0;
 	envelopeVideo.play().then(() => {
 		envelopeScreen.classList.add("is-playing");
@@ -152,10 +179,10 @@ const getCoveredPixels = () => {
 	return coveredPixels;
 };
 
-const scratchAt = (event) => {
+const scratchAt = (clientX, clientY) => {
 	const bounds = scratchCanvas.getBoundingClientRect();
-	const x = (event.clientX - bounds.left) * (scratchCanvas.width / bounds.width);
-	const y = (event.clientY - bounds.top) * (scratchCanvas.height / bounds.height);
+	const x = (clientX - bounds.left) * (scratchCanvas.width / bounds.width);
+	const y = (clientY - bounds.top) * (scratchCanvas.height / bounds.height);
 
 	scratchContext.globalCompositeOperation = "destination-out";
 	scratchContext.beginPath();
@@ -168,11 +195,24 @@ const scratchAt = (event) => {
 	}
 };
 
-const beginScratch = (event) => {
-	isScratching = true;
-	event.preventDefault();
-	scratchHeart.setPointerCapture(event.pointerId);
-	scratchAt(event);
+const beginScratch = (event, clientX, clientY) => {
+	if (!isScratching) {
+		isScratching = true;
+	}
+	if (event && typeof event.preventDefault === "function") {
+		event.preventDefault();
+	}
+	if (event && typeof event.pointerId === "number" && scratchHeart.setPointerCapture) {
+		scratchHeart.setPointerCapture(event.pointerId);
+	}
+	scratchAt(clientX, clientY);
+};
+
+const endScratch = (event) => {
+	isScratching = false;
+	if (event && typeof event.pointerId === "number" && scratchHeart.hasPointerCapture && scratchHeart.hasPointerCapture(event.pointerId)) {
+		scratchHeart.releasePointerCapture(event.pointerId);
+	}
 };
 
 const clamp = (value, minimum, maximum) => Math.min(Math.max(value, minimum), maximum);
@@ -196,6 +236,34 @@ updateScrollState();
 
 drawScratchHeart();
 heartPixels = getCoveredPixels();
+
+const handleTouchStart = (event) => {
+	scratchStartX = event.touches[0].clientX;
+	scratchStartY = event.touches[0].clientY;
+	isScratching = false;
+};
+
+const handleTouchMove = (event) => {
+	const touch = event.touches[0] || event.changedTouches[0];
+	if (!touch) {
+		return;
+	}
+
+	const movedEnoughToScratch = Math.hypot(touch.clientX - scratchStartX, touch.clientY - scratchStartY) > 8;
+	if (movedEnoughToScratch && !isScratching) {
+		beginScratch(event, touch.clientX, touch.clientY);
+		return;
+	}
+
+	if (isScratching) {
+		beginScratch(event, touch.clientX, touch.clientY);
+	}
+};
+
+const handleTouchEnd = (event) => {
+	endScratch(event);
+};
+
 scratchHeart.addEventListener("pointerdown", (event) => {
 	scratchStartX = event.clientX;
 	scratchStartY = event.clientY;
@@ -205,24 +273,18 @@ scratchHeart.addEventListener("pointermove", (event) => {
 	const movedEnoughToScratch = Math.hypot(event.clientX - scratchStartX, event.clientY - scratchStartY) > 8;
 
 	if (movedEnoughToScratch && !isScratching) {
-		beginScratch(event);
+		beginScratch(event, event.clientX, event.clientY);
 		return;
 	}
 
 	if (isScratching) {
-		event.preventDefault();
-		scratchAt(event);
+		beginScratch(event, event.clientX, event.clientY);
 	}
 });
-scratchHeart.addEventListener("pointerup", (event) => {
-	isScratching = false;
-	if (scratchHeart.hasPointerCapture(event.pointerId)) {
-		scratchHeart.releasePointerCapture(event.pointerId);
-	}
-});
-scratchHeart.addEventListener("pointercancel", (event) => {
-	isScratching = false;
-	if (scratchHeart.hasPointerCapture(event.pointerId)) {
-		scratchHeart.releasePointerCapture(event.pointerId);
-	}
-});
+scratchHeart.addEventListener("pointerup", endScratch);
+scratchHeart.addEventListener("pointercancel", endScratch);
+
+scratchHeart.addEventListener("touchstart", handleTouchStart, { passive: true });
+scratchHeart.addEventListener("touchmove", handleTouchMove, { passive: false });
+scratchHeart.addEventListener("touchend", handleTouchEnd, { passive: true });
+scratchHeart.addEventListener("touchcancel", handleTouchEnd, { passive: true });

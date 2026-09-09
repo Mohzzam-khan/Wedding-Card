@@ -213,6 +213,14 @@ body::-webkit-scrollbar {
   height: 100dvh;
   overflow: hidden;
   z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 700ms ease;
+}
+
+body.invitation-open .bg-vid {
+  opacity: 1;
+  visibility: visible;
 }
 
 .bg-vid::after {
@@ -245,8 +253,15 @@ body::-webkit-scrollbar {
   padding: 2rem 1.5rem;
   color: white;
   text-align: center;
-  transition: filter 180ms ease, transform 180ms ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 700ms ease, filter 180ms ease, transform 180ms ease;
   will-change: filter, transform;
+}
+
+body.invitation-open .text-overlay {
+  opacity: 1;
+  visibility: visible;
 }
 
 .text-overlay.is-overlapped {
