@@ -330,19 +330,19 @@ body.overlay-ready .text-overlay > :nth-child(4) {
 }
 
 .scratch-section .heart-divider {
-  color: #A8324A;
+  color: #6E1F33;
 }
 
 .scratch-section .heart-divider > span {
-  background: #A8324A;
+  background: #6E1F33;
 }
 
 .details-heart-green {
-  color: #A8324A;
+  color: #6E1F33;
 }
 
 .details-heart-green > span {
-  background: #A8324A;
+  background: #6E1F33;
 }
 
 .scratch-heart {
@@ -355,11 +355,19 @@ body.overlay-ready .text-overlay > :nth-child(4) {
   padding: 0;
   background: transparent;
   appearance: none;
-  filter: drop-shadow(0 1rem 1.1rem rgba(59, 23, 34, 0.24));
-  color: #A8324A;
+  filter: drop-shadow(0 1.2rem 1.3rem rgba(59, 23, 34, 0.28)) drop-shadow(0 0.35rem 0.65rem rgba(110, 31, 51, 0.3));
+  color: #6E1F33;
   cursor: crosshair;
   clip-path: polygon(50% 100%, 13% 58%, 5% 35%, 8% 16%, 22% 4%, 39% 6%, 50% 22%, 61% 6%, 78% 4%, 92% 16%, 95% 35%, 87% 58%);
-  touch-action: none;
+  transform: translateY(-0.2rem) scale(1.02);
+  transition: transform 180ms ease, filter 180ms ease;
+  touch-action: pan-y;
+}
+
+.scratch-heart:hover,
+.scratch-heart:focus-visible {
+  transform: translateY(-0.35rem) scale(1.04);
+  filter: drop-shadow(0 1.5rem 1.7rem rgba(59, 23, 34, 0.34)) drop-shadow(0 0.55rem 0.9rem rgba(110, 31, 51, 0.38));
 }
 
 .scratch-divider {
@@ -415,8 +423,9 @@ body.overlay-ready .text-overlay > :nth-child(4) {
   background: #F8EDEF;
   color: #3b1722;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 0.78rem;
-  line-height: 1.05;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.08;
   text-align: center;
   opacity: 1;
   z-index: 0;
@@ -432,28 +441,31 @@ body.overlay-ready .text-overlay > :nth-child(4) {
 }
 
 .scratch-heart .scratch-invitation {
-  color: #A8324A;
-  font-size: 1.35rem;
+  color: #6E1F33;
+  font-size: 1.52rem;
   font-style: italic;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .scratch-heart .scratch-date {
   color: #3b1722;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
   font-weight: 700;
   line-height: 1.15;
 }
 
 .scratch-heart .scratch-day {
-  color: #A8324A;
-  font-size: 1rem;
+  color: #6E1F33;
+  font-size: 1.08rem;
+  font-weight: 700;
 }
 
 .scratch-heart .scratch-time {
-  color: #80545d;
-  font-size: 0.9rem;
+  color: #6d4a53;
+  font-size: 0.96rem;
+  font-weight: 600;
 }
 
 .scratch-heart canvas {
@@ -1067,12 +1079,13 @@ body.overlay-ready .text-overlay > :nth-child(4) {
 }
 
 .scratch-prompt {
-  color: #A8324A;
+  color: #5e1a2a;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  font-size: clamp(1.7rem, 5vw, 2.35rem);
   font-style: italic;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.03em;
+  text-shadow: 0 0.12rem 0.3rem rgba(59, 23, 34, 0.14);
 }
 
 @keyframes scroll-prompt-in {

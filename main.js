@@ -135,6 +135,8 @@ const drawScratchHeart = () => {
 };
 
 let isScratching = false;
+let scratchStartX = 0;
+let scratchStartY = 0;
 let heartPixels = 0;
 
 const getCoveredPixels = () => {
@@ -166,6 +168,13 @@ const scratchAt = (event) => {
 	}
 };
 
+const beginScratch = (event) => {
+	isScratching = true;
+	event.preventDefault();
+	scratchHeart.setPointerCapture(event.pointerId);
+	scratchAt(event);
+};
+
 const clamp = (value, minimum, maximum) => Math.min(Math.max(value, minimum), maximum);
 
 const updateScrollState = () => {
@@ -188,18 +197,32 @@ updateScrollState();
 drawScratchHeart();
 heartPixels = getCoveredPixels();
 scratchHeart.addEventListener("pointerdown", (event) => {
-	isScratching = true;
-	scratchHeart.setPointerCapture(event.pointerId);
-	scratchAt(event);
+	scratchStartX = event.clientX;
+	scratchStartY = event.clientY;
+	isScratching = false;
 });
 scratchHeart.addEventListener("pointermove", (event) => {
+	const movedEnoughToScratch = Math.hypot(event.clientX - scratchStartX, event.clientY - scratchStartY) > 8;
+
+	if (movedEnoughToScratch && !isScratching) {
+		beginScratch(event);
+		return;
+	}
+
 	if (isScratching) {
+		event.preventDefault();
 		scratchAt(event);
 	}
 });
-scratchHeart.addEventListener("pointerup", () => {
+scratchHeart.addEventListener("pointerup", (event) => {
 	isScratching = false;
+	if (scratchHeart.hasPointerCapture(event.pointerId)) {
+		scratchHeart.releasePointerCapture(event.pointerId);
+	}
 });
-scratchHeart.addEventListener("pointercancel", () => {
+scratchHeart.addEventListener("pointercancel", (event) => {
 	isScratching = false;
+	if (scratchHeart.hasPointerCapture(event.pointerId)) {
+		scratchHeart.releasePointerCapture(event.pointerId);
+	}
 });
