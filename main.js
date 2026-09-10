@@ -2,6 +2,7 @@ const invitation = document.querySelector("#invitation");
 const details = document.querySelector("#details");
 const envelopeScreen = document.querySelector("#envelope-screen");
 const envelope = document.querySelector("#envelope");
+const tapToOpen = document.querySelector("#tap-to-open");
 const envelopeVideo = document.querySelector("#envelope-video");
 const backgroundVideo = document.querySelector("#vid");
 const scratchHeart = document.querySelector("#scratch-heart");
@@ -31,13 +32,6 @@ const setupVideo = (video) => {
 	video.src = video.dataset.src;
 	video.load();
 	video.dataset.loaded = "true";
-};
-
-const loadInitialMedia = () => {
-	setupVideo(backgroundVideo);
-	if (window.matchMedia("(min-width: 768px)").matches) {
-		setupVideo(envelopeVideo);
-	}
 };
 
 const updateCountdown = () => {
@@ -97,6 +91,9 @@ const startInvitationTransition = () => {
 };
 
 envelope.addEventListener("click", () => {
+	if (tapToOpen) {
+		tapToOpen.classList.add("is-hidden");
+	}
 	envelope.disabled = true;
 	setupVideo(envelopeVideo);
 	envelopeVideo.currentTime = 0;
