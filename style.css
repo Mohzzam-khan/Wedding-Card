@@ -39,8 +39,25 @@ body::-webkit-scrollbar {
   inset: 0;
   z-index: 10;
   overflow: hidden;
-  background: #F8EDEF;
+  background: transparent;
   transition: opacity 700ms ease, visibility 700ms ease;
+}
+
+.envelope-video-wrap {
+  position: absolute;
+  inset: 0;
+  background: #120a0c;
+}
+
+.envelope-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: #120a0c;
 }
 
 .tap-to-open {
@@ -59,6 +76,7 @@ body::-webkit-scrollbar {
   font-style: italic;
   font-weight: 800;
   letter-spacing: 0.24em;
+  line-height: 1.2;
   text-transform: uppercase;
   text-shadow: 0 0 0.7rem rgba(255, 247, 240, 0.88), 0 0 1.4rem rgba(127, 38, 59, 0.2);
   transform: translate(-50%, -50%);
@@ -66,19 +84,14 @@ body::-webkit-scrollbar {
   transition: opacity 350ms ease, transform 350ms ease, filter 350ms ease;
 }
 
+.tap-to-open span {
+  display: block;
+}
+
 .tap-to-open.is-hidden {
   opacity: 0;
   filter: blur(1px);
   transform: translate(-50%, -62%);
-}
-
-.envelope-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
 .envelope-tap-target {
