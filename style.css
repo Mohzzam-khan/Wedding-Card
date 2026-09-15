@@ -58,12 +58,13 @@ body::-webkit-scrollbar {
   object-position: center;
   display: block;
   background: #120a0c;
+  pointer-events: none;
 }
 
 .tap-to-open {
   position: absolute;
   left: 50%;
-  top: 30%;
+  top: 50%;
   z-index: 2;
   pointer-events: none;
   color: transparent;
@@ -156,6 +157,7 @@ body.invitation-open .bg-vid {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  pointer-events: none;
 }
 
 .text-overlay {

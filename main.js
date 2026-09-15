@@ -86,6 +86,8 @@ const startInvitationTransition = () => {
 	window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 	document.body.classList.add("invitation-open");
 	document.body.classList.add("overlay-ready");
+	backgroundVideo.currentTime = 0;
+	backgroundVideo.play().catch(() => {});
 	envelopeScreen.classList.add("is-opening");
 	window.setTimeout(() => envelopeScreen.classList.add("is-open"), 700);
 };
@@ -110,6 +112,7 @@ envelopeVideo.addEventListener("timeupdate", () => {
 });
 envelopeVideo.addEventListener("ended", startInvitationTransition);
 envelopeVideo.addEventListener("error", startInvitationTransition);
+backgroundVideo.addEventListener("ended", () => backgroundVideo.pause());
 
 const drawScratchHeart = () => {
 	scratchContext.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
