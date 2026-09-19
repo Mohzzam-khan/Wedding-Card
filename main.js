@@ -51,6 +51,28 @@ const updateCountdown = () => {
 setupVideo(backgroundVideo);
 setupVideo(envelopeVideo);
 
+const primeEnvelopePreview = () => {
+	if (!envelopeVideo) {
+		return;
+	}
+
+	envelopeVideo.muted = true;
+	envelopeVideo.playsInline = true;
+	envelopeVideo.currentTime = 0;
+	envelopeVideo.play().then(() => {
+		window.requestAnimationFrame(() => {
+			envelopeVideo.pause();
+			envelopeVideo.currentTime = 0;
+		});
+	}).catch(() => {});
+};
+
+if (envelopeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+	primeEnvelopePreview();
+} else {
+	envelopeVideo.addEventListener("loadeddata", primeEnvelopePreview, { once: true });
+}
+
 updateCountdown();
 window.setInterval(updateCountdown, 1000);
 
