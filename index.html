@@ -10,13 +10,13 @@
 <body>
   <div class="envelope-screen" id="envelope-screen">
     <div class="envelope-video-wrap">
-      <video class="envelope-video" id="envelope-video" src="img/VideoProject-26.mp4" muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
+      <video class="envelope-video" id="envelope-video" data-src="img/VideoProject-26.mp4" muted playsinline webkit-playsinline preload="metadata" aria-hidden="true"></video>
       <div class="tap-to-open" id="tap-to-open" aria-live="polite">Tap to <span>Open</span></div>
     </div>
     <button class="envelope-tap-target" id="envelope" type="button" aria-label="Tap anywhere to open the wedding invitation"></button>
   </div>
   <div class="bg-vid">
-    <video id="vid" src="img/bg-video2.mp4" muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
+    <video id="vid" data-src="img/bg-video2.mp4" muted playsinline webkit-playsinline preload="none" aria-hidden="true"></video>
   </div>
   <main class="text-overlay" id="invitation">
     <p class="eyebrow">With joyful hearts, we invite you to celebrate</p>
@@ -60,7 +60,7 @@
       <button class="scratch-heart" id="scratch-heart" type="button" aria-label="Scratch the heart to reveal a message">
         <span class="scratch-message">
           <span class="scratch-invitation">You're Invited!</span>
-          <span class="scratch-date">January 26, 2027</span>
+          <span class="scratch-date">26th January 2027</span>
           <span class="scratch-day">Tuesday</span>
           <span class="scratch-time">07:30 PM</span>
         </span>
@@ -68,7 +68,7 @@
       </button>
       <span></span>
     </div>
-    <button class="save-date-button" type="button"><span class="calendar-icon" aria-hidden="true"></span><span>Save the date</span></button>
+    <button class="save-date-button" id="save-date-button" type="button"><span class="calendar-icon" aria-hidden="true"></span><span>Save the date</span></button>
   </section>
   <section class="photo-carousel" aria-label="Wedding photo gallery">
     <div class="carousel-heading">
@@ -80,13 +80,13 @@
     </div>
     <div class="carousel-frame" id="photo-carousel">
       <div class="carousel-slides">
-        <img class="carousel-slide is-active" src="img/carousal-1.png" alt="Wedding decoration" aria-hidden="false">
-        <img class="carousel-slide" src="img/carousal-2.png" alt="Wedding celebration" aria-hidden="true">
-        <img class="carousel-slide" src="img/carousal-3.png" alt="Wedding flowers" aria-hidden="true">
-        <img class="carousel-slide" src="img/carousal-4.png" alt="Wedding couple" aria-hidden="true">
+        <img class="carousel-slide is-active" src="img/carousal-1.png" alt="Wedding decoration" aria-hidden="false" loading="lazy" decoding="async">
+        <img class="carousel-slide" src="img/carousal-2.png" alt="Wedding celebration" aria-hidden="true" loading="lazy" decoding="async">
+        <img class="carousel-slide" src="img/carousal-3.png" alt="Wedding flowers" aria-hidden="true" loading="lazy" decoding="async">
+        <img class="carousel-slide" src="img/carousal-4.png" alt="Wedding couple" aria-hidden="true" loading="lazy" decoding="async">
       </div>
     </div>
-    <div class="countdown" aria-label="Countdown to September 30, 2026">
+    <div class="countdown" aria-label="Countdown to 26th January 2027 at 7:30 PM">
       <h2>Soon.</h2>
       <!-- <div class="heart-divider" aria-hidden="true">
         <span></span>
@@ -131,7 +131,7 @@
         <span class="timeline-marker" aria-hidden="true"></span>
         <div>
           <h3>Guest Arrival</h3>
-          <p class="timeline-time">Jan 26, 2027, 07:00 PM</p>
+          <p class="timeline-time">26th January 2027, 07:00 PM</p>
           <p>We warmly welcome you..!</p>
         </div>
       </article>
@@ -139,7 +139,7 @@
         <span class="timeline-marker" aria-hidden="true"></span>
         <div>
           <h3>Nikkah Ceremony</h3>
-          <p class="timeline-time">Jan 26, 2027, 07:30 PM</p>
+          <p class="timeline-time">26th January 2027, 07:30 PM</p>
           <p>Your gracious presence is requested &#10084;</p>
         </div>
       </article>
@@ -147,7 +147,7 @@
         <span class="timeline-marker" aria-hidden="true"></span>
         <div>
           <h3>Reception</h3>
-          <p class="timeline-time">Jan 26, 2027, 8:30 PM</p>
+          <p class="timeline-time">26th January 2027, 8:30 PM</p>
           <p>Your gracious presence is requested at the reception at 8:30 PM onwards.</p>
         </div>
       </article>
@@ -189,7 +189,7 @@
     <div class="footer-details">
       <div class="footer-item">
         <span class="label">Wedding Date</span>
-        <strong>26th Jan 2027</strong>
+        <strong>26th January 2027</strong>
       </div>
       <div class="footer-item">
         <span class="label">Time</span>

@@ -10,7 +10,8 @@ const scratchCanvas = scratchHeart.querySelector("canvas");
 const scratchContext = scratchCanvas.getContext("2d", { willReadFrequently: true });
 const carousel = document.querySelector("#photo-carousel");
 const carouselSlides = [...carousel.querySelectorAll(".carousel-slide")];
-const countdownTarget = new Date("2027-01-31T07:00:00").getTime();
+const saveDateButton = document.querySelector("#save-date-button");
+const countdownTarget = new Date("2027-01-26T19:30:00+05:30").getTime();
 const countdownUnits = {
 	days: document.querySelector("#countdown-days"),
 	hours: document.querySelector("#countdown-hours"),
@@ -18,6 +19,7 @@ const countdownUnits = {
 	seconds: document.querySelector("#countdown-seconds")
 };
 let hasStartedInvitationTransition = false;
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const setupVideo = (video) => {
 	if (!video || !video.dataset.src || video.dataset.loaded === "true") {
@@ -48,7 +50,6 @@ const updateCountdown = () => {
 	countdownUnits.seconds.textContent = String(seconds).padStart(2, "0");
 };
 
-setupVideo(backgroundVideo);
 setupVideo(envelopeVideo);
 
 const primeEnvelopePreview = () => {
@@ -74,10 +75,19 @@ if (envelopeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
 }
 
 updateCountdown();
-window.setInterval(updateCountdown, 1000);
+let countdownTimer;
+
+const startCountdownTimer = () => {
+	window.clearInterval(countdownTimer);
+	updateCountdown();
+	if (!document.hidden) {
+		countdownTimer = window.setInterval(updateCountdown, 1000);
+	}
+};
 
 let activeCarouselIndex = 0;
 let carouselTimer;
+let isCarouselVisible = false;
 
 const showCarouselSlide = (index) => {
 	activeCarouselIndex = index;
@@ -90,6 +100,9 @@ const showCarouselSlide = (index) => {
 
 const startCarouselTimer = () => {
 	window.clearInterval(carouselTimer);
+	if (reducedMotionQuery.matches || document.hidden || !isCarouselVisible) {
+		return;
+	}
 	carouselTimer = window.setInterval(() => {
 		showCarouselSlide((activeCarouselIndex + 1) % carouselSlides.length);
 	}, 3000);
@@ -97,7 +110,26 @@ const startCarouselTimer = () => {
 
 carousel.addEventListener("mouseenter", () => window.clearInterval(carouselTimer));
 carousel.addEventListener("mouseleave", startCarouselTimer);
-startCarouselTimer();
+const carouselObserver = new IntersectionObserver((entries) => {
+	isCarouselVisible = entries[0].isIntersecting;
+	if (isCarouselVisible) {
+		startCarouselTimer();
+	} else {
+		window.clearInterval(carouselTimer);
+	}
+}, { threshold: 0.15 });
+carouselObserver.observe(carousel);
+
+document.addEventListener("visibilitychange", () => {
+	startCountdownTimer();
+	if (document.hidden) {
+		window.clearInterval(carouselTimer);
+	} else {
+		startCarouselTimer();
+	}
+});
+reducedMotionQuery.addEventListener("change", startCarouselTimer);
+startCountdownTimer();
 
 const startInvitationTransition = () => {
 	if (hasStartedInvitationTransition) {
@@ -108,6 +140,7 @@ const startInvitationTransition = () => {
 	window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 	document.body.classList.add("invitation-open");
 	document.body.classList.add("overlay-ready");
+	setupVideo(backgroundVideo);
 	backgroundVideo.currentTime = 0;
 	backgroundVideo.play().catch(() => {});
 	envelopeScreen.classList.add("is-opening");
@@ -187,6 +220,7 @@ let isScratching = false;
 let scratchStartX = 0;
 let scratchStartY = 0;
 let heartPixels = 0;
+let scratchCheckFrame = 0;
 
 const getCoveredPixels = () => {
 	const pixels = scratchContext.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height).data;
@@ -210,10 +244,20 @@ const scratchAt = (clientX, clientY) => {
 	scratchContext.beginPath();
 	scratchContext.arc(x, y, 13, 0, Math.PI * 2);
 	scratchContext.fill();
+	scheduleRevealCheck();
+};
 
+const updateRevealState = () => {
+	scratchCheckFrame = 0;
 	const erasedPercentage = 1 - getCoveredPixels() / heartPixels;
 	if (erasedPercentage >= 0.5) {
 		scratchHeart.classList.add("is-revealed");
+	}
+};
+
+const scheduleRevealCheck = () => {
+	if (!scratchCheckFrame && !scratchHeart.classList.contains("is-revealed")) {
+		scratchCheckFrame = window.requestAnimationFrame(updateRevealState);
 	}
 };
 
@@ -252,46 +296,37 @@ const updateScrollState = () => {
 	details.classList.toggle("is-visible", detailsTop < window.innerHeight * 0.9);
 };
 
-window.addEventListener("scroll", updateScrollState, { passive: true });
+let scrollFrame;
+const scheduleScrollUpdate = () => {
+	if (!scrollFrame) {
+		scrollFrame = window.requestAnimationFrame(() => {
+			scrollFrame = 0;
+			updateScrollState();
+		});
+	}
+};
+window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
 window.addEventListener("resize", updateScrollState);
 updateScrollState();
 
 drawScratchHeart();
 heartPixels = getCoveredPixels();
 
-const handleTouchStart = (event) => {
-	scratchStartX = event.touches[0].clientX;
-	scratchStartY = event.touches[0].clientY;
-	isScratching = false;
-};
-
-const handleTouchMove = (event) => {
-	const touch = event.touches[0] || event.changedTouches[0];
-	if (!touch) {
-		return;
-	}
-
-	const movedEnoughToScratch = Math.hypot(touch.clientX - scratchStartX, touch.clientY - scratchStartY) > 8;
-	if (movedEnoughToScratch && !isScratching) {
-		beginScratch(event, touch.clientX, touch.clientY);
-		return;
-	}
-
-	if (isScratching) {
-		beginScratch(event, touch.clientX, touch.clientY);
-	}
-};
-
-const handleTouchEnd = (event) => {
-	endScratch(event);
-};
-
 scratchHeart.addEventListener("pointerdown", (event) => {
+	if (!event.isPrimary) {
+		return;
+	}
 	scratchStartX = event.clientX;
 	scratchStartY = event.clientY;
 	isScratching = false;
+	if (scratchHeart.setPointerCapture) {
+		scratchHeart.setPointerCapture(event.pointerId);
+	}
 });
 scratchHeart.addEventListener("pointermove", (event) => {
+	if (!event.isPrimary) {
+		return;
+	}
 	const movedEnoughToScratch = Math.hypot(event.clientX - scratchStartX, event.clientY - scratchStartY) > 8;
 
 	if (movedEnoughToScratch && !isScratching) {
@@ -303,10 +338,34 @@ scratchHeart.addEventListener("pointermove", (event) => {
 		beginScratch(event, event.clientX, event.clientY);
 	}
 });
-scratchHeart.addEventListener("pointerup", endScratch);
+scratchHeart.addEventListener("pointerup", (event) => {
+	updateRevealState();
+	endScratch(event);
+});
 scratchHeart.addEventListener("pointercancel", endScratch);
 
-scratchHeart.addEventListener("touchstart", handleTouchStart, { passive: true });
-scratchHeart.addEventListener("touchmove", handleTouchMove, { passive: false });
-scratchHeart.addEventListener("touchend", handleTouchEnd, { passive: true });
-scratchHeart.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+saveDateButton.addEventListener("click", () => {
+	const calendarEvent = [
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"PRODID:-//Mubina and Zaid//Wedding Invitation//EN",
+		"BEGIN:VEVENT",
+		"UID:mubina-zaid-wedding-20270126@invitation",
+		"DTSTAMP:20260101T000000Z",
+		"DTSTART:20270126T140000Z",
+		"DTEND:20270126T163000Z",
+		"SUMMARY:Mubina and Zaid's Wedding",
+		"LOCATION:Mannat Banquets\\, Shed No 119 A and 120-A\\, Dr Mascarenhas Rd\\, Mazgaon\\, Mumbai\\, Maharashtra 400010",
+		"DESCRIPTION:Join us as we celebrate Mubina and Zaid's wedding.",
+		"END:VEVENT",
+		"END:VCALENDAR"
+	].join("\\r\\n");
+	const calendarUrl = URL.createObjectURL(new Blob([calendarEvent], { type: "text/calendar;charset=utf-8" }));
+	const calendarLink = document.createElement("a");
+	calendarLink.href = calendarUrl;
+	calendarLink.download = "mubina-and-zaid-wedding.ics";
+	document.body.append(calendarLink);
+	calendarLink.click();
+	calendarLink.remove();
+	window.setTimeout(() => URL.revokeObjectURL(calendarUrl), 1000);
+});

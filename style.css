@@ -171,7 +171,7 @@ body.invitation-open .bg-vid {
   gap: 1.25rem;
   max-width: 42rem;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: max(2rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
   color: white;
   text-align: center;
   opacity: 0;
@@ -297,7 +297,7 @@ body.overlay-ready .text-overlay > :nth-child(4) {
   clip-path: polygon(50% 100%, 13% 58%, 5% 35%, 8% 16%, 22% 4%, 39% 6%, 50% 22%, 61% 6%, 78% 4%, 92% 16%, 95% 35%, 87% 58%);
   transform: translateY(-0.2rem) scale(1.02);
   transition: transform 180ms ease, filter 180ms ease;
-  touch-action: pan-y;
+  touch-action: none;
 }
 
 .scratch-heart:hover,
@@ -492,7 +492,7 @@ body.overlay-ready .text-overlay > :nth-child(4) {
 
 .scroll-prompt {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
   left: 50%;
   z-index: 2;
   display: flex;
@@ -811,7 +811,7 @@ body.overlay-ready .text-overlay > :nth-child(4) {
 .timeline-event p {
   margin: 0 0 0.65rem;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 15;
+  font-size: 15px;
   line-height: 1.4;
 }
 
